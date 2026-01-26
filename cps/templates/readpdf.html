@@ -51,7 +51,39 @@ See https://github.com/adobe-type-tools/cmap-resources
     });
     </script>
 
-    <script src="{{ url_for('static', filename='js/libs/viewer.js') }}" type="module">></script>
+    <script src="{{ url_for('static', filename='js/libs/viewer.js') }}" type="module"></script>
+
+    <!-- 
+    temporary HACK to make a basic online bookmark feature for PDF reading, will fix in a later version,
+    this is not meant to be used long term, although other developers, maintainers, and contributers
+    can take the code for refrence or modify and fix it
+    -->
+    <script type="text/javascript">
+    var bookmarkUrl = "{{ url_for('web.set_bookmark', book_id=pdffile, book_format=book_format) }}";
+    var csrf_token = "{{ csrf_token() }}";
+    var bookmark = "{{ bookmark.bookmark_key if bookmark != None }}";
+
+    function uploadBookmark()
+    {
+      bookmark = document.getElementById('viewBookmark').getAttribute('href');
+      document.getElementById("viewOnlineBookmark").href = bookmark;
+      console.log(bookmark);
+
+      fetch(bookmarkUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "x-csrftoken": csrf_token,
+        },
+        body: new URLSearchParams({"bookmark": bookmark})
+      });
+    }
+
+    document.addEventListener("webviewerloaded", function() {
+      document.getElementById("setbookmark").addEventListener("click", uploadBookmark);
+      document.getElementById("viewOnlineBookmark").href = bookmark;
+    });
+    </script>
 
   </head>
 
@@ -279,7 +311,15 @@ See https://github.com/adobe-type-tools/cmap-resources
 
             <div class="horizontalToolbarSeparator"></div>
 
-            <button id="documentProperties" class="secondaryToolbarButton" title="Document Properties…" tabindex="69" data-l10n-id="pdfjs-document-properties-button" aria-controls="documentPropertiesDialog">
+            <button id="setbookmark" class="secondaryToolbarButton" title="Bookmark this page" tabindex="69">
+              <span>Bookmark this page</span>
+            </button>
+            <a href="#" id="viewOnlineBookmark" class="secondaryToolbarButton" title="Visit latest saved bookmark" tabindex="70" data-l10n-id="pdfjs-bookmark-button">
+              <span>View latest bookmark</span>
+            </a>
+            <div class="horizontalToolbarSeparator"></div>
+
+            <button id="documentProperties" class="secondaryToolbarButton" title="Document Properties…" tabindex="71" data-l10n-id="pdfjs-document-properties-button" aria-controls="documentPropertiesDialog">
               <span data-l10n-id="pdfjs-document-properties-button-label">Document Properties…</span>
             </button>
           </div>
