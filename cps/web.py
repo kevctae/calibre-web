@@ -173,7 +173,43 @@ def set_bookmark(book_id, book_format):
     ub.session_commit("Bookmark for user {} in book {} created".format(current_user.id, book_id))
     return "", 201
 
-
+@web.route("/ajax/pdf-bookmark/<int:book_id>", methods=['POST'])
+@user_login_required
+def create_pdf_bookmark(book_id):
+    try:
+        data = request.get_json()
+        name = data.get('name', '').strip()
+        page = data.get('page')
+        
+        if not name:
+            return jsonify({'error': 'Bookmark name is required'}), 400
+        if page is None or not isinstance(page, int) or page < 1:
+            return jsonify({'error': 'Valid page number is required'}), 400
+        
+        # Check if a bookmark with the same name already exists for this user and book
+        existing = ub.session.query(ub.PdfBookmark).filter(
+            and_(ub.PdfBookmark.user_id == int(current_user.id),
+                 ub.PdfBookmark.book_id == book_id,
+                 ub.PdfBookmark.name == name)
+        ).first()
+        
+        if existing:
+            return jsonify({'error': 'A bookmark with this name already exists'}), 409
+        
+        bookmark = ub.PdfBookmark(
+            user_id=current_user.id,
+            book_id=book_id,
+            name=name,
+            page=page
+        )
+        ub.session.add(bookmark)
+        ub.session_commit(f"PDF bookmark '{name}' created for user {current_user.id} in book {book_id}")
+        
+        return jsonify({
+            'id': bookmark.id,
+            'name': bookmark.name,
+            'page': bookmark.page,
+            'created': bookmark.created.isoformat() if bookmark.created else None
         }), 201
     except Exception as e:
         log.error(f"Error creating PDF bookmark: {e}")
