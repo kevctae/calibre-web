@@ -1,0 +1,185 @@
+/**
+ * PDF Bookmarks Styles
+ */
+
+/* Bookmarks icon for sidebar button */
+#viewBookmarks::before {
+    -webkit-mask-image: url(libs/images/toolbarButton-viewBookmarks.svg);
+    mask-image: url(libs/images/toolbarButton-viewBookmarks.svg);
+}
+
+/* Bookmarks icon for sidebar button */
+#viewBookmarks::before {
+    -webkit-mask-image: url(libs/images/toolbarButton-viewBookmarks.svg);
+    mask-image: url(libs/images/toolbarButton-viewBookmarks.svg);
+}
+
+/* Bookmarks view container */
+#bookmarksView {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+}
+
+#bookmarksView.hidden {
+    display: none;
+}
+
+/* Header with add button */
+#bookmarksHeader {
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+#addBookmarkBtn {
+    width: 100%;
+    padding: 8px 12px;
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+#addBookmarkBtn:hover {
+    background-color: #0052a3;
+}
+
+#addBookmarkBtn:active {
+    background-color: #003d7a;
+}
+
+/* Bookmarks list */
+#bookmarksList {
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* Individual bookmark item */
+.bookmark-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 8px;
+    margin-bottom: 6px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.bookmark-item:hover {
+    background-color: #e9ecef;
+}
+
+.bookmark-info {
+    flex: 1;
+    cursor: pointer;
+    min-width: 0;
+}
+
+.bookmark-name {
+    font-weight: 500;
+    font-size: 13px;
+    color: #333;
+    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bookmark-page {
+    font-size: 11px;
+    color: #666;
+}
+
+.bookmark-delete {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    margin-left: 8px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.bookmark-delete:hover {
+    background-color: #c82333;
+}
+
+/* No bookmarks message */
+.no-bookmarks {
+    text-align: center;
+    color: #666;
+    padding: 20px;
+    font-size: 13px;
+}
+
+/* Toast notification */
+.pdf-bookmark-toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    background-color: #333;
+    color: white;
+    border-radius: 4px;
+    font-size: 14px;
+    z-index: 10000;
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+        opacity 0.3s,
+        transform 0.3s;
+}
+
+.pdf-bookmark-toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.pdf-bookmark-toast.success {
+    background-color: #28a745;
+}
+
+.pdf-bookmark-toast.error {
+    background-color: #dc3545;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    #bookmarksHeader {
+        border-bottom-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .bookmark-item {
+        background-color: #2d2d2d;
+    }
+
+    .bookmark-item:hover {
+        background-color: #3d3d3d;
+    }
+
+    .bookmark-name {
+        color: #e0e0e0;
+    }
+
+    .bookmark-page {
+        color: #aaa;
+    }
+
+    .no-bookmarks {
+        color: #aaa;
+    }
+}

@@ -35,3 +35,9 @@ gdrive_credentials
 client_secrets.json
 gmail.json
 /.key
+
+# Docker volume directories (local development)
+config/
+cwa-book-ingest/
+calibre-library/
+calibre-plugins/

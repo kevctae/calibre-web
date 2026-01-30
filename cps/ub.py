@@ -432,6 +432,17 @@ class Bookmark(Base):
     bookmark_key = Column(String)
 
 
+class PdfBookmark(Base):
+    __tablename__ = 'pdf_bookmark'
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    book_id = Column(Integer)
+    name = Column(String, nullable=False)
+    page = Column(Integer, nullable=False)
+    created = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+
 # Baseclass representing books that are archived on the user's Kobo device.
 class ArchivedBook(Base):
     __tablename__ = 'archived_book'

@@ -33,7 +33,8 @@ See https://github.com/adobe-type-tools/cmap-resources
     <link rel="apple-touch-icon" sizes="140x140" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}"> 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/libs/viewer.css') }}">
-	  <!-- This snippet is used in production (included from viewer.html) -->
+	  <link rel="stylesheet" href="{{ url_for('static', filename='css/pdf-bookmarks.css') }}">
+    <!-- This snippet is used in production (included from viewer.html) -->
 	  <link rel="resource" type="application/l10n" href="{{ url_for('static', filename='locale/locale.json') }}">
 	  <script src="{{ url_for('static', filename='js/libs/pdf.js') }}" type="module"></script>
 
@@ -49,9 +50,14 @@ See https://github.com/adobe-type-tools/cmap-resources
         PDFViewerApplicationOptions.set('workerSrc', "{{ url_for('static', filename='js/libs/pdf.worker.js') }}");
         PDFViewerApplicationOptions.set('defaultUrl',"{{ url_for('web.serve_book', book_id=pdffile, book_format='pdf') }}")
     });
+
+    // PDF Bookmarks functionality
+    window.bookId = {{ pdffile }};
+    window.csrfToken = "{{ csrf_token() }}";
     </script>
 
     <script src="{{ url_for('static', filename='js/libs/viewer.js') }}" type="module">></script>
+    <script src="{{ url_for('static', filename='js/pdf-bookmarks.js') }}"></script>
 
   </head>
 
@@ -74,6 +80,9 @@ See https://github.com/adobe-type-tools/cmap-resources
               <button id="viewLayers" class="toolbarButton" title="Show Layers (double-click to reset all layers to the default state)" tabindex="5" data-l10n-id="pdfjs-layers-button" role="radio" aria-checked="false" aria-controls="layersView">
                  <span data-l10n-id="pdfjs-layers-button-label">Layers</span>
               </button>
+              <button id="viewBookmarks" class="toolbarButton" title="Show Bookmarks" tabindex="6" role="radio" aria-checked="false" aria-controls="bookmarksView">
+                 <span>Bookmarks</span>
+              </button>
             </div>
           </div>
 
@@ -95,6 +104,12 @@ See https://github.com/adobe-type-tools/cmap-resources
           <div id="attachmentsView" class="hidden">
           </div>
           <div id="layersView" class="hidden">
+          </div>
+          <div id="bookmarksView" class="hidden">
+            <div id="bookmarksHeader">
+              <button id="addBookmarkBtn" title="Add Bookmark">+ Add Bookmark</button>
+            </div>
+            <div id="bookmarksList"></div>
           </div>
         </div>
         <div id="sidebarResizer"></div>

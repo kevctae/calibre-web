@@ -174,6 +174,33 @@ def set_bookmark(book_id, book_format):
     return "", 201
 
 
+        }), 201
+    except Exception as e:
+        log.error(f"Error creating PDF bookmark: {e}")
+        return jsonify({'error': 'Failed to create bookmark'}), 500
+
+
+@web.route("/ajax/pdf-bookmark/<int:bookmark_id>", methods=['DELETE'])
+@user_login_required
+def delete_pdf_bookmark(bookmark_id):
+    try:
+        bookmark = ub.session.query(ub.PdfBookmark).filter(
+            and_(ub.PdfBookmark.id == bookmark_id,
+                 ub.PdfBookmark.user_id == int(current_user.id))
+        ).first()
+        
+        if not bookmark:
+            return jsonify({'error': 'Bookmark not found'}), 404
+        
+        ub.session.delete(bookmark)
+        ub.session_commit(f"PDF bookmark {bookmark_id} deleted for user {current_user.id}")
+        
+        return "", 204
+    except Exception as e:
+        log.error(f"Error deleting PDF bookmark: {e}")
+        return jsonify({'error': 'Failed to delete bookmark'}), 500
+
+
 @web.route("/ajax/toggleread/<int:book_id>", methods=['POST'])
 @user_login_required
 def toggle_read(book_id):
