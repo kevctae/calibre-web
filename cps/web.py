@@ -173,6 +173,23 @@ def set_bookmark(book_id, book_format):
     ub.session_commit("Bookmark for user {} in book {} created".format(current_user.id, book_id))
     return "", 201
 
+
+@web.route("/ajax/pdf-bookmark/<int:book_id>", methods=['GET'])
+@user_login_required
+def get_pdf_bookmarks(book_id):
+    bookmarks = ub.session.query(ub.PdfBookmark).filter(
+        and_(ub.PdfBookmark.user_id == int(current_user.id),
+             ub.PdfBookmark.book_id == book_id)
+    ).order_by(ub.PdfBookmark.page).all()
+    
+    return jsonify([{
+        'id': bm.id,
+        'name': bm.name,
+        'page': bm.page,
+        'created': bm.created.isoformat() if bm.created else None
+    } for bm in bookmarks])
+
+
 @web.route("/ajax/pdf-bookmark/<int:book_id>", methods=['POST'])
 @user_login_required
 def create_pdf_bookmark(book_id):
